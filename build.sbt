@@ -54,8 +54,8 @@ lazy val settings =
 lazy val commonSettings =
   Seq(
     // scalaVersion and crossScalaVersions from .travis.yml via sbt-travisci
-    // scalaVersion := "2.12.1",
-    // crossScalaVersions := Seq(scalaVersion.value, "2.11.8"),
+    scalaVersion := "2.12.2",
+    crossScalaVersions := Seq(scalaVersion.value, "2.11.11"),
     organization := "com.advancedtelematic",
     licenses += ("Apache 2.0",
       url("http://www.apache.org/licenses/LICENSE-2.0")),
