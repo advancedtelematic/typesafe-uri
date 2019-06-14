@@ -59,6 +59,12 @@ lazy val commonSettings =
     organization := "com.advancedtelematic",
     licenses += ("Apache 2.0",
       url("http://www.apache.org/licenses/LICENSE-2.0")),
+      scmInfo := Some(
+        ScmInfo(
+          url("https://github.com/advancedtelematic/typesafe-uri"),
+          "scm:git:git@github.com:advancedtelematic/typesafe-uri.git"
+        )
+      ),
     mappings.in(Compile, packageBin) += baseDirectory.in(ThisBuild).value / "LICENSE" -> "LICENSE",
     scalacOptions ++= Seq(
       "-deprecation",
