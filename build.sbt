@@ -88,14 +88,6 @@ lazy val commonSettings =
       "-source", "1.8",
       "-target", "1.8"
     ),
-    unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
-    unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
-      publishTo := {
-      if (isSnapshot.value)
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases" at nexus + "content/repositories/releases")
-    },
     credentials +=
       Credentials(
         readSettings("PUBLISH_REALM"),
@@ -103,6 +95,15 @@ lazy val commonSettings =
         readSettings("PUBLISH_USER"),
         readSettings("PUBLISH_PASSWORD")
       ),
+    unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
+    unmanagedSourceDirectories.in(Test) := Seq(scalaSource.in(Test).value),
+      publishTo := {
+        val server = nexus
+        if (isSnapshot.value)
+          Some("snapshots" at server + "snapshots")
+        else
+          Some("releases"  at server + "releases")
+    },
     releaseProcess := Seq(
       checkSnapshotDependencies,
       releaseStepCommand(ExtraReleaseCommands.initialVcsChecksCommand),
