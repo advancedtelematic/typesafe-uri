@@ -1,0 +1,43 @@
+stages:
+  - static scans
+  - publish pages
+  - publish packages
+
+variables:
+  VAULT_ADDR: $VAULT_ADDR
+
+
+secret_detection:
+  stage: static scans
+
+license_scanning:
+  stage: static scans
+
+publish:
+  stage: publish packages
+  tags:
+    - docker-sock
+  image: advancedtelematic/gitlab-jobs:0.2.5
+  only:
+    - master
+  except:
+    - schedules
+  script:
+    - git fetch origin
+    - git describe
+    - export VAULT_TOKEN=$(cat /opt/vault/token)
+    - gitlab-docker-login $VAULT_ADDR
+    - eval $(set-vault-env -v $VAULT_ADDR --secret gitlab/ats-aws-key --secret gitlab/maven-publish)
+    - sbt -sbt-dir ./.sbt -ivy ./.ivy2 +publish
+  cache:
+    paths:
+      - .ivy2/
+      - .sbt/
+
+include:
+  - project: "poit/spc/be/prodsec-secret-detection"
+    file: "ITT-Secret-Detection.gitlab-ci.yml"
+  - template: License-Scanning.gitlab-ci.yml
+  - project: olp/edge/ota/infra/security
+    ref: v0.0.9
+    file: /shared.yaml
